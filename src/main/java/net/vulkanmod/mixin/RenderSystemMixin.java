@@ -220,7 +220,9 @@ public abstract class RenderSystemMixin {
      * @author
      */
     @Overwrite
-    public static void colorMask(boolean red, boolean green, boolean blue, boolean alpha) {}
+    public static void colorMask(boolean red, boolean green, boolean blue, boolean alpha) {
+        VRenderSystem.colorMask(red, green, blue, alpha);
+    }
 
     /**
      * @author
@@ -344,7 +346,7 @@ public abstract class RenderSystemMixin {
         VRenderSystem.lightDirection0.putFloat(4, p_157174_.getY());
         VRenderSystem.lightDirection0.putFloat(8, p_157174_.getZ());
 
-        VRenderSystem.lightDirection1.putFloat(0, p_157175_.getY());
+        VRenderSystem.lightDirection1.putFloat(0, p_157175_.getX());
         VRenderSystem.lightDirection1.putFloat(4, p_157175_.getY());
         VRenderSystem.lightDirection1.putFloat(8, p_157175_.getZ());
     }
@@ -458,4 +460,6 @@ public abstract class RenderSystemMixin {
         VRenderSystem.applyProjectionMatrix(projectionMatrix);
         VRenderSystem.calculateMVP();
     }
+
+
 }

@@ -54,6 +54,7 @@ public class Drawer {
     public static Pipeline.BlendState currentBlendState = Pipeline.DEFAULT_BLEND_STATE;
     public static Pipeline.DepthState currentDepthState = Pipeline.DEFAULT_DEPTH_STATE;
     public static Pipeline.LogicOpState currentLogicOpState = Pipeline.DEFAULT_LOGICOP_STATE;
+    public static Pipeline.ColorMask currentColorMask = Pipeline.DEFAULT_COLORMASK;
 
     private static Matrix4f projectionMatrix = new Matrix4f();
     private static Matrix4f modelViewMatrix = new Matrix4f();
@@ -446,7 +447,8 @@ public class Drawer {
         VkCommandBuffer commandBuffer = commandBuffers.get(currentFrame);
 
         currentDepthState = VRenderSystem.getDepthState();
-        Pipeline.PipelineState currentState = new Pipeline.PipelineState(currentBlendState, currentDepthState, currentLogicOpState);
+        currentColorMask = new Pipeline.ColorMask(VRenderSystem.getColorMask());
+        Pipeline.PipelineState currentState = new Pipeline.PipelineState(currentBlendState, currentDepthState, currentLogicOpState, currentColorMask);
         vkCmdBindPipeline(commandBuffer, VK_PIPELINE_BIND_POINT_GRAPHICS, pipeline.getHandle(currentState));
 
         usedPipelines.add(pipeline);
@@ -523,6 +525,22 @@ public class Drawer {
 
             vkCmdClearAttachments(commandBuffer, pAttachments, pRect);
         }
+    }
+
+    public static void setViewport(int x, int y, int width, int height) {
+
+        try(MemoryStack stack = stackPush()) {
+            VkViewport.Buffer viewport = VkViewport.calloc(1, stack);
+            viewport.x(x);
+            viewport.y(height + y);
+            viewport.width(width);
+            viewport.height(-height);
+            viewport.minDepth(0.0f);
+            viewport.maxDepth(1.0f);
+
+            vkCmdSetViewport(commandBuffers.get(currentFrame), 0, viewport);
+        }
+
     }
 
     public static void pushDebugSection(String s) {

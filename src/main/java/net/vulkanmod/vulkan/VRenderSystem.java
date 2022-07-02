@@ -25,6 +25,8 @@ public class VRenderSystem {
     public static boolean depthMask = true;
     public static int depthFun = 515;
 
+    public static int colorMask = Pipeline.ColorMask.getColorMask(true, true, true, true);
+
     public static boolean cull = true;
 
     public static float clearDepth = 1.0f;
@@ -43,16 +45,6 @@ public class VRenderSystem {
     public static ByteBuffer shaderFogColor = MemoryUtil.memAlloc(4 * 4);
 
     private static final float[] depthBias = new float[2];
-
-//    static {
-//        MemoryUtil.memPutFloat(MemoryUtil.memAddress(modelViewMatrix), 1);
-//        MemoryUtil.memPutFloat(MemoryUtil.memAddress(modelViewMatrix) + 4, 4);
-//
-//        float[] floats = new float[16];
-//        floats[0] = modelViewMatrix.asFloatBuffer().get(0);
-//        floats[1] = modelViewMatrix.asFloatBuffer().get(1);
-//        floats[1] = modelViewMatrix.asFloatBuffer().get(1);
-//    }
 
     public static void initRenderer()
     {
@@ -225,6 +217,14 @@ public class VRenderSystem {
 
     public static Pipeline.DepthState getDepthState() {
         return new Pipeline.DepthState(depthTest, depthMask, depthFun);
+    }
+
+    public static void colorMask(boolean b, boolean b1, boolean b2, boolean b3) {
+        colorMask = Pipeline.ColorMask.getColorMask(b, b1, b2, b3);
+    }
+
+    public static int getColorMask() {
+        return colorMask;
     }
 
     public static void enableDepthTest() {
